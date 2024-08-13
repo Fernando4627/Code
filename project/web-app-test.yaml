@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-app-test
+spec:
+  containers:
+  - name: web-app-test
+    image: code:latest
+    command: ["python", "-m", "unittest", "test_app.py"]
+    volumeMounts:
+    - name: certs
+      mountPath: /etc/nginx/certs
+  - name: report-to-discord
+    image: code:latest
+    command: ["python", "report_to_discord.py"]
+    env:
+    - name: DISCORD_WEBHOOK_URL
+      value: "YOUR_DISCORD_WEBHOOK_URL"
+  volumes:
+  - name: certs
+    secret:
+      secretName: my-nginx-certs
